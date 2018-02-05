@@ -768,7 +768,7 @@ var Scenario = (function () {
 
 				var timer = this.requestTimer.bind(this);
 				var that = this;
-				this._actionIx = 0;
+				this._actionIx = -1;
 				var next = (function (_next) {
 					var _nextWrapper = function next() {
 						return _next.apply(this, arguments);
@@ -780,7 +780,8 @@ var Scenario = (function () {
 
 					return _nextWrapper;
 				})(function (direction) {
-					if (that._actionIx >= that._actions.length || that._actionIx < 0) {
+					that._actionIx = direction === "BACK" ? that._actionIx - 1 : that._actionIx + 1;
+					if ((that._actionIx >= that._actions.length && !direction) || (that._actionIx < 0 && direction === "BACK")) {
 						return timer(function () {
 							that.stop();
 						}, defaultOptions.afterDelay);
@@ -788,10 +789,9 @@ var Scenario = (function () {
 
 					that.trigger("action", that._actionIx);
 					var action = parseActionCall(that._actions[that._actionIx]);
-					that._actionIx = direction === 'BACK' ? that._actionIx - 1 : that._actionIx + 1;
 
 					if (action.name in actionsDefinition) {
-						actionsDefinition[action.name].call(that, action.options, editor, next, timer);
+						actionsDefinition[action.name].call(that, action.options, editor, next, timer, that._actions, that._actionIx);
 					} else {
 						throw new Error("No such action: " + action.name);
 					}
