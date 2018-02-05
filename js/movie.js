@@ -596,27 +596,30 @@ function parseMovieDefinition(text) {
 	};
 
 	// read movie definition
-	readLines(parts[1]).filter(skipComment).forEach(function (line) {
-		// do we have outline definition here?
-		line = line.replace(options.outlineSeparator, function (str, title) {
-			if (options.prettifyKeys) {
-				outline[scenario.length] = prettifyKeyBindings(title.trim());
+	parts.forEach(function(part, index) {
+		if (index === 0) return;
+		readLines(part).filter(skipComment).forEach(function (line) {
+			// do we have outline definition here?
+			line = line.replace(options.outlineSeparator, function (str, title) {
+				if (options.prettifyKeys) {
+					outline[scenario.length] = prettifyKeyBindings(title.trim());
+				}
+				return "";
+			});
+	
+			var sd = line.match(reDef);
+			if (!sd) {
+				return scenario.push(line.trim());
 			}
-			return "";
+	
+			if (sd[2].charAt(0) === "{") {
+				var obj = {};
+				obj[sd[1]] = parseJSON(unescape(sd[2]));
+				return scenario.push(obj);
+			}
+	
+			scenario.push(sd[1] + ":" + unescape(sd[2]));
 		});
-
-		var sd = line.match(reDef);
-		if (!sd) {
-			return scenario.push(line.trim());
-		}
-
-		if (sd[2].charAt(0) === "{") {
-			var obj = {};
-			obj[sd[1]] = parseJSON(unescape(sd[2]));
-			return scenario.push(obj);
-		}
-
-		scenario.push(sd[1] + ":" + unescape(sd[2]));
 	});
 
 	// read editor options
