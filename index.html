@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+  <head>
+    <link rel="stylesheet" href="css/codemirror.css">
+    <link rel="stylesheet" href="css/movie.css">
+    <link rel="stylesheet" href="css/app.css">
+  </head>
+  <body>
+    <button class="CodeMirror-start">Start</button>
+<textarea id="code">
+main()
+{
+  printf("Hello World");
+  |
+  exit();
+  
+}
+@@@
+showTooltip: { text: 'This is a tooltip on line 1. The tip of this tool tip is pointing under character "a" of "main" which is the third character from the start of line 1.', pos: { line: 1, ch: 3 } }
+@@@
+showTooltip: { text: 'The tooltip is now on line 3 and the tip of the tool tip is on character "e" which is the (tab) + 10 characters from start of line 3.', pos: { line: 3, ch: 10 } }
+@@@
+showTooltip: { text: 'The tooltip is now on line 5 and the tip arrow of this tooltip is on position tab + 2 from line 5.', pos: { line: 5, ch: 2 } }
+</textarea>
+    <script src="js/codemirror.js"></script>
+    <script src="js/movie.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>
