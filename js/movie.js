@@ -1922,26 +1922,58 @@ var actions = {
 
 exports.actions = actions;
 
-function show(text, pos, callback) {
+function show(text, pos, callback, next, actions, actionIx) {
 	hide();
 
 	var domText = '<div class="CodeMirror-tooltip">';
 	domText += '<div class="CodeMirror-tooltip__content">';
 	domText += text;
 	domText += '</div>';
-	domText += '<div class="CodeMirror-tooltip__footer">';
-	domText += '<button class="CodeMirror-tooltip__button">Back</button>';
-	domText += '<button class="CodeMirror-tooltip__button">Next</button>';
-	domText += '</div>';
+	if (actions) {
+		domText += '<div class="CodeMirror-tooltip__footer">';
+		if (actionIx === 0) {
+			domText += '<button class="CodeMirror-tooltip__back-button hidden">Back</button>';
+			domText += '<button class="CodeMirror-tooltip__next-button">Next</button>';
+		} else if (actionIx >= actions.length - 1) {
+			domText += '<button class="CodeMirror-tooltip__back-button">Back</button>';
+			domText += '<button class="CodeMirror-tooltip__finish-button">Finish</button>';
+		} else {
+			domText += '<button class="CodeMirror-tooltip__back-button">Back</button>';
+			domText += '<button class="CodeMirror-tooltip__next-button">Next</button>';
+		}
+		domText += '</div>';
+	}
 	domText += '<div class="CodeMirror-tooltip__tail"></div>';
 	domText += '</div>';
 	instance = dom.toDOM(domText);
 
 	dom.css(instance, prefixed("transform"), "scale(0)");
 	document.body.appendChild(instance);
+	var addActions = function() {
+		var backButton = document.getElementsByClassName("CodeMirror-tooltip__back-button")[0];
+		var nextButton = document.getElementsByClassName("CodeMirror-tooltip__next-button")[0];
+		var finishButton = document.getElementsByClassName("CodeMirror-tooltip__finish-button")[0];
+		if (backButton) {
+			backButton.addEventListener("click", function(e) {
+				next("BACK");
+			});
+		}
+		if (nextButton) {
+			nextButton.addEventListener("click", function(e) {
+				next();
+			});
+		}
+		if (finishButton) {
+			finishButton.addEventListener("click", function(e) {
+				hide(function() {
+					next();
+				});
+			});
+		}
+	}
 
 	alignPopupWithTail(instance, { position: pos });
-	animateShow(instance, { complete: callback });
+	animateShow(instance, { complete: addActions });
 }
 
 function hide(callback) {
