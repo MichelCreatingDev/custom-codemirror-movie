@@ -2027,7 +2027,7 @@ function alignPopupWithTail(popup) {
 		isTop = true;
 	} else {
 		// place below target position
-		resultY = pos.y + tail.offsetHeight;
+		resultY = pos.y + tail.offsetHeight + 16;
 		isTop = false;
 	}
 
