@@ -1916,7 +1916,17 @@ exports.actions = actions;
 function show(text, pos, callback) {
 	hide();
 
-	instance = dom.toDOM("<div class=\"CodeMirror-tooltip\">\n\t\t<div class=\"CodeMirror-tooltip__content\">" + text + "</div>\n\t\t<div class=\"CodeMirror-tooltip__tail\"></div>\n\t\t</div>");
+	var domText = '<div class="CodeMirror-tooltip">';
+	domText += '<div class="CodeMirror-tooltip__content">';
+	domText += text;
+	domText += '</div>';
+	domText += '<div class="CodeMirror-tooltip__footer">';
+	domText += '<button class="CodeMirror-tooltip__button">Back</button>';
+	domText += '<button class="CodeMirror-tooltip__button">Next</button>';
+	domText += '</div>';
+	domText += '<div class="CodeMirror-tooltip__tail"></div>';
+	domText += '</div>';
+	instance = dom.toDOM(domText);
 
 	dom.css(instance, prefixed("transform"), "scale(0)");
 	document.body.appendChild(instance);
