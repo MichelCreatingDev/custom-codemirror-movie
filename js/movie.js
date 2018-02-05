@@ -1904,13 +1904,12 @@ var actions = {
   * Shows tooltip with specified text. This tooltip should be explicitly 
   * hidden with `hideTooltip` action
   */
-	showTooltip: function showTooltip(options, editor, next, timer) {
+	showTooltip: function showTooltip(options, editor, next, timer, actions, actionIx) {
 		options = extend({
 			pos: "caret" // position where tooltip should point to
 		}, wrap("text", options));
 
-		show(options.text, resolvePosition(options.pos, editor));
-		next();
+		show(options.text, resolvePosition(options.pos, editor), null, next, actions, actionIx);
 	},
 
 	/**
