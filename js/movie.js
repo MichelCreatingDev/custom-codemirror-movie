@@ -779,15 +779,16 @@ var Scenario = (function () {
 					};
 
 					return _nextWrapper;
-				})(function () {
-					if (that._actionIx >= that._actions.length) {
+				})(function (direction) {
+					if (that._actionIx >= that._actions.length || that._actionIx < 0) {
 						return timer(function () {
 							that.stop();
 						}, defaultOptions.afterDelay);
 					}
 
 					that.trigger("action", that._actionIx);
-					var action = parseActionCall(that._actions[that._actionIx++]);
+					var action = parseActionCall(that._actions[that._actionIx]);
+					that._actionIx = direction === 'BACK' ? that._actionIx - 1 : that._actionIx + 1;
 
 					if (action.name in actionsDefinition) {
 						actionsDefinition[action.name].call(that, action.options, editor, next, timer);
