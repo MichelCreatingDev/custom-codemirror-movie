@@ -426,7 +426,13 @@ var defaultOptions = {
   * String or regexp used to separate sections of movie definition, e.g.
   * default value, scenario and editor options
   */
-	sectionSeparator: "@@@",
+	movieOptionSeparator: "@@@",
+
+	/**
+  * String or regexp used to separate sections of mirror option definition, e.g.
+  * default value, scenario and editor options
+  */
+	mirrorOptionSeparator: "^^^",
 
 	/** Regular expression to extract outline from scenario line */
 	outlineSeparator: /\s+:::\s+(.+)$/,
@@ -577,7 +583,7 @@ function parseMovieDefinition(text) {
 	var options = arguments[1] === undefined ? {} : arguments[1];
 
 	options = extend({}, defaultOptions, options || {});
-	var parts = text.split(options.sectionSeparator);
+	var parts = text.split(options.movieOptionSeparator);
 
 	// parse scenario
 	var reDef = /^(\w+)\s*:\s*(.+)$/;
@@ -614,14 +620,14 @@ function parseMovieDefinition(text) {
 	});
 
 	// read editor options
-	if (parts[2]) {
-		readLines(parts[2]).filter(skipComment).forEach(function (line) {
-			var sd = line.match(reDef);
-			if (sd) {
-				editorOptions[sd[1]] = sd[2];
-			}
-		});
-	}
+	// if (parts[2]) {
+	// 	readLines(parts[2]).filter(skipComment).forEach(function (line) {
+	// 		var sd = line.match(reDef);
+	// 		if (sd) {
+	// 			editorOptions[sd[1]] = sd[2];
+	// 		}
+	// 	});
+	// }
 
 	return {
 		value: unescape(parts[0].trim()),
